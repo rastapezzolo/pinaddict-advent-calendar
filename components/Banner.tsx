@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import Timer from "./TImer";
+import Timer from "./Timer";
 
 export default function Banner({ cta = "signup", test = "a", lang = "it" }) {
 

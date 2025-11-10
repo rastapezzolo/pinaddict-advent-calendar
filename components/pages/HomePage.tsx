@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Page, Product } from '../../types';
 import { useCart } from '../../contexts/CartContext';
-import Timer from '../TImer';
+import Timer from '../Timer';
 import FeaturesSection from '../FeaturesSection';
 import { product, ProductSection } from './ProductSection';
 import SurpriseSection from './SurpriseSection';
