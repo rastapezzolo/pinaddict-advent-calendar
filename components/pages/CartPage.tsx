@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../../contexts/CartContext';
 import type { CartItem } from '../../types';
 import TrashIcon from '../icons/TrashIcon';
 import PlusIcon from '../icons/PlusIcon';
 import MinusIcon from '../icons/MinusIcon';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Initialize Stripe - replace with your publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 
 const CartItemRow: React.FC<{ item: CartItem }> = ({ item }) => {
@@ -55,57 +59,171 @@ const Cart: React.FC = () => {
 };
 
 const CheckoutForm: React.FC = () => {
-  const { cartTotal, clearCart } = useCart();
+  const { cartItems, cartTotal, clearCart } = useCart();
   const [isOrderComplete, setIsOrderComplete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+  const [postalCode, setPostalCode] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check for successful payment on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+
+    if (success === 'true') {
+      setIsOrderComplete(true);
+      clearCart();
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [clearCart]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock order processing
-    console.log("Processing order...");
-    setIsOrderComplete(true);
-    clearCart();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const stripe = await stripePromise;
+
+      if (!stripe) {
+        throw new Error('Stripe non è stato caricato correttamente');
+      }
+
+      // Call Lambda to create checkout session
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiUrl}/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cartItems,
+          customerEmail: email,
+          shippingAddress: {
+            street,
+            city,
+            province,
+            postalCode,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Errore durante la creazione della sessione di pagamento');
+      }
+
+      const { url } = await response.json();
+
+      // Redirect to Stripe Checkout
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('URL di checkout non ricevuto');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError(err instanceof Error ? err.message : 'Errore durante il checkout. Riprova.');
+      setIsLoading(false);
+    }
   };
 
   if (isOrderComplete) {
     return (
       <div className="bg-green-50 text-green-800 p-8 rounded-lg text-center">
-        <h3 className="text-2xl font-bold">Grazie per il tuo ordine!</h3>
+        <h3 className="text-2xl font-bold">Grazie per il tuo ordine! 🎉</h3>
         <p className="mt-2">Abbiamo ricevuto il tuo ordine e lo stiamo preparando per la spedizione. Riceverai una conferma via email a breve.</p>
       </div>
     );
   }
 
-    return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Indirizzo di Spedizione</label>
-                <input type="text" placeholder="Via, numero civico" required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                    <input type="text" placeholder="Città" required className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                    <input type="text" placeholder="Provincia" required className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                    <input type="text" placeholder="CAP" required className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                </div>
-            </div>
-             <div>
-                <label className="block text-sm font-medium text-gray-700">Dati di Pagamento</label>
-                <div className="mt-1 p-3 bg-gray-100 rounded-md">
-                    <p className="text-sm text-gray-600">Questo è un checkout fittizio. Non inserire dati reali.</p>
-                    <input type="text" placeholder="Numero Carta" required className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                     <div className="grid grid-cols-2 gap-4 mt-2">
-                        <input type="text" placeholder="MM/AA" required className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                        <input type="text" placeholder="CVC" required className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-                    </div>
-                </div>
-            </div>
-            <button type="submit" className="w-full bg-[#f06aa7] text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-[#f06aa7] transition-all duration-300 shadow-lg">
-                Paga Ora {cartTotal.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}
-            </button>
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-50 text-red-800 p-4 rounded-lg">
+          <p className="text-sm">{error}</p>
+        </div>
+      )}
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Indirizzo di Spedizione</label>
+        <input
+          type="text"
+          placeholder="Via, numero civico"
+          required
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+          <input
+            type="text"
+            placeholder="Città"
+            required
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+          />
+          <input
+            type="text"
+            placeholder="Provincia"
+            required
+            value={province}
+            onChange={(e) => setProvince(e.target.value)}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+          />
+          <input
+            type="text"
+            placeholder="CAP"
+            required
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+          />
+        </div>
+      </div>
+
+      <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+        <p className="text-sm text-blue-700">
+          ℹ️ Verrai reindirizzato a Stripe per completare il pagamento in modo sicuro
+        </p>
+      </div>
+
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full bg-[#f06aa7] text-white font-bold py-4 px-6 rounded-lg text-lg hover:bg-[#d85a8f] transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isLoading ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Caricamento...
+          </span>
+        ) : (
+          `Procedi al Pagamento ${cartTotal.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}`
+        )}
+      </button>
+    </form>
+  );
 };
 
 const CartPage: React.FC = () => {
