@@ -218,17 +218,25 @@ else
 fi
 
 # Deploy create-checkout-session
-deploy_lambda \
-    "create-checkout-session" \
-    "Creates Stripe Checkout sessions for Pin Addict orders" \
-    "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},FRONTEND_URL=${FRONTEND_URL}}" \
-    ""
+# deploy_lambda \
+#     "create-checkout-session" \
+#     "Creates Stripe Checkout sessions for Pin Addict orders" \
+#     "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},FRONTEND_URL=${FRONTEND_URL}}" \
+#     ""
 
-# Deploy stripe-webhook
+# # Deploy stripe-webhook
+# deploy_lambda \
+#     "stripe-webhook" \
+#     "Handles Stripe webhooks and sends order confirmation emails" \
+#     "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET},FRONTEND_URL=${FRONTEND_URL},AWS_REGION=${AWS_REGION},FROM_EMAIL=${FROM_EMAIL}}" \
+#     "ses"
+
+# Deploy contact-form
+ADMIN_EMAIL=${ADMIN_EMAIL:-$FROM_EMAIL}
 deploy_lambda \
-    "stripe-webhook" \
-    "Handles Stripe webhooks and sends order confirmation emails" \
-    "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET},FRONTEND_URL=${FRONTEND_URL},AWS_REGION=${AWS_REGION},FROM_EMAIL=${FROM_EMAIL}}" \
+    "contact-form" \
+    "Handles contact form submissions and sends emails to admin" \
+    "Variables={FROM_EMAIL=${FROM_EMAIL},ADMIN_EMAIL=${ADMIN_EMAIL}}" \
     "ses"
 
 echo -e "${GREEN}✅ All Lambda functions deployed successfully!${NC}\n"
@@ -237,9 +245,11 @@ echo -e "${GREEN}✅ All Lambda functions deployed successfully!${NC}\n"
 echo -e "${YELLOW}📝 Lambda Function ARNs:${NC}"
 CHECKOUT_ARN=$(aws lambda get-function --function-name create-checkout-session --region $AWS_REGION $PROFILE_FLAG --query 'Configuration.FunctionArn' --output text)
 WEBHOOK_ARN=$(aws lambda get-function --function-name stripe-webhook --region $AWS_REGION $PROFILE_FLAG --query 'Configuration.FunctionArn' --output text)
+CONTACT_ARN=$(aws lambda get-function --function-name contact-form --region $AWS_REGION $PROFILE_FLAG --query 'Configuration.FunctionArn' --output text)
 
 echo "   create-checkout-session: $CHECKOUT_ARN"
 echo "   stripe-webhook: $WEBHOOK_ARN"
+echo "   contact-form: $CONTACT_ARN"
 echo ""
 
 echo -e "${YELLOW}🔧 Next Steps:${NC}"
@@ -247,6 +257,7 @@ echo "1. Configure API Gateway:"
 echo "   - Create REST API with resources:"
 echo "     • /create-checkout-session (POST) → create-checkout-session Lambda"
 echo "     • /stripe-webhook (POST) → stripe-webhook Lambda"
+echo "     • /contact (POST) → contact-form Lambda"
 echo "   - Enable CORS on /create-checkout-session"
 echo "   - Deploy API to 'prod' stage"
 echo ""

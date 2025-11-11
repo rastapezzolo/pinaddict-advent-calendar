@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../../contexts/CartContext';
 import type { CartItem } from '../../types';
 import TrashIcon from '../icons/TrashIcon';
@@ -59,8 +59,7 @@ const Cart: React.FC = () => {
 };
 
 const CheckoutForm: React.FC = () => {
-  const { cartItems, cartTotal, clearCart } = useCart();
-  const [isOrderComplete, setIsOrderComplete] = useState(false);
+  const { cartItems, cartTotal } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
@@ -68,19 +67,6 @@ const CheckoutForm: React.FC = () => {
   const [city, setCity] = useState('');
   const [province, setProvince] = useState('');
   const [postalCode, setPostalCode] = useState('');
-
-  // Check for successful payment on component mount
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
-
-    if (success === 'true') {
-      setIsOrderComplete(true);
-      clearCart();
-      // Clean up URL
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, [clearCart]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,15 +118,6 @@ const CheckoutForm: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  if (isOrderComplete) {
-    return (
-      <div className="bg-green-50 text-green-800 p-8 rounded-lg text-center">
-        <h3 className="text-2xl font-bold">Grazie per il tuo ordine! 🎉</h3>
-        <p className="mt-2">Abbiamo ricevuto il tuo ordine e lo stiamo preparando per la spedizione. Riceverai una conferma via email a breve.</p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
