@@ -1,0 +1,7 @@
+{
+  "httpMethod": "POST",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"cartItems\":[{\"product\":{\"id\":1,\"name\":\"Calendario dell'Avvento Pin Addict\",\"price\":49.99,\"description\":\"24 pin esclusivi pop culture\",\"imageUrl\":\"https://cdn.pinaddict.it/calendario.jpg\"},\"quantity\":1}],\"customerEmail\":\"test@example.com\",\"shippingAddress\":{\"street\":\"Via Roma 123\",\"city\":\"Milano\",\"province\":\"MI\",\"postalCode\":\"20100\"}}"
+}

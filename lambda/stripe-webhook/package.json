@@ -1,0 +1,11 @@
+{
+  "name": "stripe-webhook",
+  "version": "1.0.0",
+  "description": "Lambda function to handle Stripe webhooks and send confirmation emails",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "stripe": "^17.5.0",
+    "@aws-sdk/client-ses": "^3.705.0"
+  }
+}

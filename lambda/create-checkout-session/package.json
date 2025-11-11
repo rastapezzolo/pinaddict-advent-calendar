@@ -1,0 +1,10 @@
+{
+  "name": "create-checkout-session",
+  "version": "1.0.0",
+  "description": "Lambda function to create Stripe Checkout session",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "stripe": "^17.5.0"
+  }
+}
