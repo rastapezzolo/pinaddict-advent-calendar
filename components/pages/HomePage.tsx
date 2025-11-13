@@ -19,13 +19,13 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
 
   const videoSrc = [
     // `${process.env.CDN_BASE_URL}/videos/10.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/09.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/pinaddict-hero.mp4`,
     // `${process.env.CDN_BASE_URL}/videos/06.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/07.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/02.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/04.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/05.mp4`,
-    `${process.env.CDN_BASE_URL}/videos/03.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/07.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/02.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/04.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/05.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/03.mp4`,
     // `${process.env.CDN_BASE_URL}/videos/01.mp4`,
     // `${process.env.CDN_BASE_URL}/videos/08.mp4`,
   ]
@@ -84,9 +84,10 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
       <div className="__right absolute md:static top-0 right-0 w-full h-full md:h-auto md:w-auto flex items-center justify-center md_px-4 bg-black/30">
         <video
           className="w-full h-full md:h-auto max-h-screen object-cover"
-          src={videoSrc[0]}
+          // src={videoSrc[0]}
+          src={`${process.env.CDN_BASE_URL}/videos/pinaddict-hero.mp4`}
           autoPlay
-          // loop
+          loop
           muted
           playsInline
           ref={playerRef}

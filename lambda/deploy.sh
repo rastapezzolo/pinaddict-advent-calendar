@@ -91,6 +91,13 @@ deploy_lambda() {
             $PROFILE_FLAG \
             --output text > /dev/null
 
+        # Wait for the code update to complete before updating configuration
+        echo "   Waiting for code update to complete..."
+        aws lambda wait function-updated \
+            --function-name $FUNCTION_NAME \
+            --region $AWS_REGION \
+            $PROFILE_FLAG
+
         # Update environment variables if provided
         if [ ! -z "$ENV_VARS" ]; then
             echo "   Updating environment variables..."
@@ -217,21 +224,28 @@ else
     FROM_EMAIL="ordini@pinaddict.it"
 fi
 
+# echo env variables being used
+echo "Using the following environment variables for deployment:"
+echo "   STRIPE_SECRET_KEY: ${YELLOW}${STRIPE_SECRET_KEY:0:4}...${NC}"
+echo "   STRIPE_WEBHOOK_SECRET: ${YELLOW}${STRIPE_WEBHOOK_SECRET:0:4}...${NC}"
+echo "   FRONTEND_URL: ${YELLOW}${FRONTEND_URL}${NC}"
+echo "   FROM_EMAIL: ${YELLOW}${FROM_EMAIL}${NC}"
+echo ""
 # Deploy create-checkout-session
-# deploy_lambda \
-#     "create-checkout-session" \
-#     "Creates Stripe Checkout sessions for Pin Addict orders" \
-#     "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},FRONTEND_URL=${FRONTEND_URL}}" \
-#     ""
+deploy_lambda \
+    "create-checkout-session" \
+    "Creates Stripe Checkout sessions for Pin Addict orders" \
+    "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},FRONTEND_URL=${FRONTEND_URL}}" \
+    ""
 
-# # Deploy stripe-webhook
-# deploy_lambda \
-#     "stripe-webhook" \
-#     "Handles Stripe webhooks and sends order confirmation emails" \
-#     "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET},FRONTEND_URL=${FRONTEND_URL},AWS_REGION=${AWS_REGION},FROM_EMAIL=${FROM_EMAIL}}" \
-#     "ses"
+# Deploy stripe-webhook
+deploy_lambda \
+    "stripe-webhook" \
+    "Handles Stripe webhooks and sends order confirmation emails" \
+    "Variables={STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY},STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET},FRONTEND_URL=${FRONTEND_URL},FROM_EMAIL=${FROM_EMAIL}}" \
+    "ses"
 
-# Deploy contact-form
+# # Deploy contact-form
 ADMIN_EMAIL=${ADMIN_EMAIL:-$FROM_EMAIL}
 deploy_lambda \
     "contact-form" \
