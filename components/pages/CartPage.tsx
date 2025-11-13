@@ -16,18 +16,16 @@ const CartItemRow: React.FC<{ item: CartItem }> = ({ item }) => {
     return (
         <div className="flex items-center justify-between py-4 border-b border-gray-200">
             <div className="flex items-center space-x-4">
-                <img src={item.product.imageUrl} alt={item.product.name} className="w-20 h-20 rounded-md object-cover" />
+                <img src={`${process.env.CDN_BASE_URL}/5805271895895641063.jpg`} alt={item.product.name} className="w-20 h-20 rounded-md object-cover" />
                 <div>
                     <h3 className="font-semibold text-gray-800">{item.product.name}</h3>
                     <p className="text-sm text-gray-500">{item.product.price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
                 </div>
             </div>
             <div className="flex items-center space-x-4">
-                <div className="flex items-center border border-gray-300 rounded-md">
-                    <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} className="p-2 text-gray-500 hover:bg-gray-100"><MinusIcon /></button>
+                {/* <div className="flex items-center border border-gray-300 rounded-md">
                     <span className="px-4 font-semibold">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.product.id, item.quantity + 1)} className="p-2 text-gray-500 hover:bg-gray-100"><PlusIcon /></button>
-                </div>
+                </div> */}
                 <p className="font-bold w-24 text-right">{(item.product.price * item.quantity).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
                 <button onClick={() => removeFromCart(item.product.id)} className="text-gray-400 hover:text-red-500 transition-colors"><TrashIcon /></button>
             </div>
