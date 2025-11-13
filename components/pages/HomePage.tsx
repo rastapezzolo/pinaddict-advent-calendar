@@ -17,6 +17,52 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
     navigateTo('cart');
   };
 
+  const videoSrc = [
+    // `${process.env.CDN_BASE_URL}/videos/10.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/09.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/06.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/07.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/02.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/04.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/05.mp4`,
+    `${process.env.CDN_BASE_URL}/videos/03.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/01.mp4`,
+    // `${process.env.CDN_BASE_URL}/videos/08.mp4`,
+  ]
+
+  // play first video then loop through others whe finishing ended
+  const playerRef = React.useRef<HTMLVideoElement>(null);
+
+  // preload all the videos fetching them in advance
+  const preloadVideos = () => {
+    videoSrc.forEach((src) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'video';
+      link.href = src;
+      document.head.appendChild(link);
+    });
+  };
+
+  React.useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    preloadVideos();
+    let currentVideoIndex = 0;
+    const handleEnded = () => {
+      currentVideoIndex = (currentVideoIndex + 1) % videoSrc.length;
+      player.src = videoSrc[currentVideoIndex];
+      player.play();
+    };
+
+    player.addEventListener('ended', () => {
+      handleEnded();
+    });
+    //
+      return () => {
+      player.removeEventListener('ended', handleEnded);
+    };
+  }, [videoSrc]);
 
   return (
   <div className="relative h-screen bg-[#43d3b0]/40 bg-center flex items-center justify-center">
@@ -27,7 +73,7 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
           <Timer></Timer>
         </div>
         <h1 className="text-5xl md:text-7xl font-black uppercase tracking-wider drop-shadow-lg text-[#f06aa7]">L'Attesa non è Mai Stata Così Pop</h1>
-        <p className="mt-4 text-xl md:text-2xl font-light max-w-2xl mx-auto drop-shadow-md text-teal-600 mb-2">
+        <p className="mt-4 text-xl md:text-2xl font-light max-w-2xl mx-auto drop-shadow-md text-white md:text-teal-600 mb-2">
           Regala un'esplosione di cultura pop ai tuoi cari.
           <br />L'unico Calendario dell'avvento artigianale contenente una spilla a sorpresa ogni giorno fino a Natale! <br /><br /><br /> 24 spille esclusive dalle tue serie TV, film, cartoni animati e fumetti preferiti.
         </p>
@@ -35,14 +81,15 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
           Acquista Subito
         </button>
       </div>
-      <div className="__right absolute md:static top-0 right-0 w-full h-full md:h-auto md:w-auto flex items-center justify-center md_px-4">
+      <div className="__right absolute md:static top-0 right-0 w-full h-full md:h-auto md:w-auto flex items-center justify-center md_px-4 bg-black/30">
         <video
           className="w-full h-full md:h-auto max-h-screen object-cover"
-          src={`${process.env.CDN_BASE_URL}/video5805271895435648087.mp4`}
+          src={videoSrc[0]}
           autoPlay
-          loop
+          // loop
           muted
           playsInline
+          ref={playerRef}
         />
       </div>
     </div>
