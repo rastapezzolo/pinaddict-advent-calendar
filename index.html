@@ -101,7 +101,9 @@
 	el.id = "schema-markup"
   el.text = json
 
-	document.querySelector('body').appendChild(el)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.appendChild(el);
+  });
 
 
 </script>
