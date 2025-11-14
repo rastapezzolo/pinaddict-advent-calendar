@@ -20,9 +20,9 @@ export const ProductSection: React.FC<{ navigateTo: (page: Page) => void }> = ({
     const { addToCart } = useCart();
 
     const images = [
+      `${process.env.CDN_BASE_URL}/5805271895895641078.jpg`,
       `${process.env.CDN_BASE_URL}/5805271895895641063.jpg`,
       `${process.env.CDN_BASE_URL}/5805271895895641080.jpg`,
-      `${process.env.CDN_BASE_URL}/5805271895895641078.jpg`,
       `${process.env.CDN_BASE_URL}/5805271895895641074.jpg`,
       `${process.env.CDN_BASE_URL}/5805271895895641076.jpg`,
       `${process.env.CDN_BASE_URL}/5805271895895641077.jpg`,
