@@ -73,7 +73,7 @@ const SocialButtons = () => {
         className="w-7 h-7 sm:w-8 sm:h-8 text-white"
         viewBox="0 0 192 192" 
         xmlns="http://www.w3.org/2000/svg" 
-        xml:space="preserve" 
+        xmlSpace="preserve" 
         >
           <g id="SVGRepo_bgCarrier" 
             strokeWidth="0"></g>
