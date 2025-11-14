@@ -44,6 +44,67 @@
     </style>
   <script type="importmap">
 </script>
+<script type="text/javascript">
+  const faqData = [
+    {
+      question: "Che cos'è il Calendario dell'Avvento di Pin Addict?",
+      answer: "Il Calendario dell'Avvento di Pin Addict è un'esperienza unica che offre ai collezionisti di pin e agli appassionati la possibilità di scoprire una nuova sorpresa ogni giorno durante il periodo natalizio."
+    },
+    {
+      question: "Cosa posso aspettarmi all'interno del calendario?",
+      answer: "All'interno del calendario troverai una selezione esclusiva di pin a tema pop per celebrare la magia delle festività."
+    },
+    {
+      question: "Come posso acquistare il Calendario dell'Avvento?",
+      answer: "Puoi acquistare il Calendario dell'Avvento direttamente sul nostro sito web ufficiale, www.pinaddict.it."
+    },
+    {
+      question: "Il calendario è adatto come regalo di Natale?",
+      answer: "Assolutamente sì! Il Calendario dell'Avvento di Pin Addict è il regalo perfetto per amici e familiari che amano i pin e le sorprese."
+    }
+  ];
+  var mainEntity = ""
+
+  if(faqData.length > 0) {
+    mainEntity = JSON.stringify(faqData.map(faq => {
+      return {
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer.replace(/"/g, '\\"')
+        }
+      }
+    }))
+  }
+
+  var mainEntityJsonString = mainEntity === "" ? "" : `, "mainEntity": ${mainEntity}`
+
+  var json = `{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Pin Addict",
+    "description": "Scopri il Calendario dell'Avvento di Pin Addict! Un'esperienza unica con sorprese quotidiane per collezionisti di pin e appassionati.",
+    "image": {  "@type": "ImageObject",  "url": "https://cdn.pinaddict.it/1758818477.webp" },
+    "genre": "E-commerce",
+    "url": "https://www.pinaddict.it/",
+    "potentialAction": {
+      "@type": "BuyingAction",
+      "target": "https://www.pinaddict.it/",
+    },
+    "keywords": "pin addict, calendario avvento, pin, collezione pin, avvento, regali natale, pins, spille, pop, serie tv, fil, animation, cartoon",
+    ${mainEntityJsonString}  
+  }`
+  
+  var el = document.createElement('script');
+  el.type = 'application/ld+json';
+	el.id = "schema-markup"
+  el.text = json
+
+	document.querySelector('body').appendChild(el)
+
+
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
   <body>

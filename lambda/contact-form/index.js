@@ -6,6 +6,19 @@ const sesClient = new SESClient({ region: 'us-east-1' });
 exports.handler = async (event) => {
   console.log('Contact form submission received:', JSON.stringify(event, null, 2));
 
+  // Handle OPTIONS preflight request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      },
+      body: '',
+    };
+  }
+
   // Parse request body
   let body;
   try {
