@@ -5,7 +5,7 @@ const FAQSection = () => {
     {
       id: 1,
       question: 'Quando verrà spedito il mio calendario?',
-      answer: 'Tutti gli ordini vengono spediti entro 24 ore tramite consegna express. Riceverai immediatamente le informazioni di tracciamento.',
+      answer: 'Tutti gli ordini vengono spediti entro 24 ore. Riceverai appena disponibili le informazioni di tracciamento.',
       bgColor: 'bg-red-50',
       borderColor: 'border-red-500',
       iconBg: 'bg-red-600',
@@ -23,7 +23,7 @@ const FAQSection = () => {
     {
       id: 3,
       question: 'Posso comprarne più di uno?',
-      answer: 'A causa dello stock limitato (solo 5 disponibili), consigliamo di ordinare rapidamente. Ogni cliente può acquistare fino a 2 calendari.',
+      answer: 'A causa dello stock limitato (solo 5 disponibili), consigliamo di ordinare rapidamente. Ogni cliente può acquistare al massimo 1 calendario.',
       bgColor: 'bg-red-50',
       borderColor: 'border-red-500',
       iconBg: 'bg-red-600',
