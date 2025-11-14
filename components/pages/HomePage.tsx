@@ -73,7 +73,7 @@ const HeroSection: React.FC<{ navigateTo: (page: Page) => void }> = ({ navigateT
           <Timer></Timer>
         </div>
         <h1 className="text-5xl md:text-6xl font-black uppercase tracking-wider drop-shadow-lg text-[#f06aa7]">L'Attesa non è Mai Stata Così Pop</h1>
-        <p className="mt-4 text-xl md:text-2xl font-light max-w-2xl mx-auto drop-shadow-md text-white md:text-teal-600 mb-2">
+        <p className="mt-4 text-l md:text-xl font-light max-w-2xl mx-auto drop-shadow-md text-white md:text-teal-600 mb-2">
           Regala un'esplosione di cultura pop ai tuoi cari.
           <br />L'unico Calendario dell'avvento artigianale contenente una spilla a sorpresa ogni giorno fino a Natale! <br /><br /><br /> 24 spille esclusive dalle tue serie TV, film, cartoni animati e fumetti preferiti.
         </p>

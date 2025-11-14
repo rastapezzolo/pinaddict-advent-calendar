@@ -20,7 +20,7 @@ const sendConfirmationEmail = async (customerEmail, orderDetails) => {
   ).join('\n');
 
   const emailParams = {
-    Source: process.env.FROM_EMAIL || 'ordini@pinaddict.it',
+    Source: process.env.FROM_EMAIL || 'info@pinaddict.it',
     Destination: {
       ToAddresses: [customerEmail],
     },
