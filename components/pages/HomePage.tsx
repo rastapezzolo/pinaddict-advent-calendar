@@ -73,7 +73,7 @@ const HeroSection: React.FC = () => {
   }, [videoSrc]);
 
   return (
-    <div className="relative h-screen bg-[#43d3b0]/40 bg-center flex items-center justify-center">
+    <div className="relative h-screen bg-[#43d3b0]/40 bg-center flex items-center justify-center px-4 md:px-4">
       <div className="show md:hidden absolute inset-0 bg-black opacity-30 z-20"></div>
       <div className=" text-center grid gap-4 md:grid-cols-2">
         <div className="__left content-center px-4 relative z-30 w-full">
@@ -85,7 +85,7 @@ const HeroSection: React.FC = () => {
             Regala un'esplosione di cultura pop ai tuoi cari.
             <br />L'unico Calendario dell'avvento artigianale contenente una spilla a sorpresa ogni giorno fino a Natale! <br /><br /><br /> 24 spille esclusive dalle tue serie TV, film, cartoni animati e fumetti preferiti.
           </p>
-          <button onClick={handleAddToCart} className="w-full md:w-auto bg-pink-500 text-white font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider hover:bg-[#f06aa7] transform hover:scale-105 transition-all duration-300 shadow-lg my-4">
+          <button onClick={handleAddToCart} className="w-full max-w-sm md:w-auto bg-pink-500 text-white font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider hover:bg-[#f06aa7] transform hover:scale-105 transition-all duration-300 shadow-lg my-4">
             Acquista Subito
           </button>
         </div>

@@ -7,7 +7,8 @@ import ImageCarousel from '../ImageCarousel';
 export const product: Product = {
   id: 1,
   name: "Calendario dell'Avvento Pin Addict",
-  price: 49.99,
+  price: 44.90,
+  oldPrice: 49.90,
   description: "All'interno troverai 24 scatoline, ognuna contenente una spilla in metallo a sorpresa a tema cultura pop: serie TV, film, cartoni animati, e videogiochi. Un regalo perfetto per attendere il Natale con stile!",
   features: [
     '24 Giorni di Gioia',
@@ -62,7 +63,7 @@ export const ProductSection: React.FC = () => {
                           <ImageCarousel images={images} />
                         </div>
                         <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
-                        <p className="text-3xl font-light text-pink-500 my-4 bold">{product.price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
+                        <p className="text-3xl font-light text-pink-500 my-4 font-bold"><span className="text-2xl text-pink-300 line-through">{product.oldPrice.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</span>&nbsp;<span className="font-bold">{product.price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</span></p>
                         <button onClick={handleAddToCart} className="w-full md:w-auto bg-pink-500 text-white font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider hover:bg-[#f06aa7] transform hover:scale-105 transition-all duration-300 shadow-lg">
                             Acquista Subito
                         </button>
