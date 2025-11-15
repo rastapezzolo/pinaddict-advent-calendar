@@ -43,13 +43,13 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
         <div className="relative h-96 overflow-hidden rounded-lg">
           {/* Images */}
           <div 
-            className="flex transition-transform duration-500 ease-in-out h-full w-full md:w-1/2"
+            className="flex transition-transform duration-500 ease-in-out h-full lg:w-1/2"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
             {images.map((image, index) => (
               <div 
                 key={index} 
-                className="min-w-full h-full flex-shrink-0 cursor-pointer"
+                className="w-full h-full flex-shrink-0 cursor-pointer"
                 onClick={() => openFullscreen(index)}
               >
                 <img 

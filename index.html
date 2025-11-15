@@ -54,6 +54,10 @@
 <script type="text/javascript">
   const faqData = [
     {
+      question: "Qual è il regalo migliore come Calendario dell'avvento?",
+      answer: "Regala il Calendario dell'Avvento di Pin Addict ogni giorno per 24 giorni avrai una nuova spilletta a tema pop da collezionare o indossare."
+    },
+    {
       question: "Che cos'è il Calendario dell'Avvento di Pin Addict?",
       answer: "Il Calendario dell'Avvento di Pin Addict è un'esperienza unica che offre ai collezionisti di pin e agli appassionati la possibilità di scoprire una nuova sorpresa ogni giorno durante il periodo natalizio."
     },
@@ -108,7 +112,6 @@
     ${mainEntityJsonString}  
   }`
   
-  console.log("Schema Markup JSON-LD:", json);
   var el = document.createElement('script');
   el.type = 'application/ld+json';
 	el.id = "schema-markup"
@@ -118,6 +121,7 @@
     document.body.appendChild(el);
   });
 
+  window.dataLayer = window.dataLayer || [];
 
 </script>
 <link rel="stylesheet" href="/index.css">

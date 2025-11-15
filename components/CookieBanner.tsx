@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Page } from '../types';
-
-interface CookieBannerProps {
-  navigateTo: (page: Page) => void;
-}
+import { Link } from 'react-router-dom';
 
 interface CookieConsent {
   necessary: boolean;
@@ -11,25 +7,20 @@ interface CookieConsent {
   timestamp: number;
 }
 
-const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
+const CookieBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
     const consent = localStorage.getItem('cookie_consent');
     if (!consent) {
-      // Show banner after a short delay for better UX
       setTimeout(() => setIsVisible(true), 1000);
     } else {
-      // Load existing preferences
       try {
         const parsed: CookieConsent = JSON.parse(consent);
         setAnalyticsEnabled(parsed.analytics);
-        // Here you would initialize Google Analytics if analytics is true
         if (parsed.analytics) {
-          // TODO: Initialize Google Analytics when implemented
           console.log('Analytics enabled');
         }
       } catch (e) {
@@ -40,7 +31,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
 
   const saveConsent = (analytics: boolean) => {
     const consent: CookieConsent = {
-      necessary: true, // Always true
+      necessary: true,
       analytics,
       timestamp: Date.now(),
     };
@@ -48,7 +39,6 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
     setAnalyticsEnabled(analytics);
 
     if (analytics) {
-      // TODO: Initialize Google Analytics when implemented
       console.log('User accepted analytics');
     }
 
@@ -71,12 +61,8 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 pointer-events-none">
-      {/* Overlay */}
       <div className="fixed inset-0 bg-black bg-opacity-50 pointer-events-auto" onClick={() => !showDetails && rejectAll()} />
-
-      {/* Banner */}
       <div className="relative bg-white rounded-lg shadow-2xl max-w-4xl w-full pointer-events-auto mb-4 overflow-hidden">
-        {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
           <h3 className="text-xl font-bold text-white flex items-center">
             <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -86,11 +72,8 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
             Il tuo consenso sui cookie
           </h3>
         </div>
-
-        {/* Content */}
         <div className="px-6 py-6">
           {!showDetails ? (
-            // Simple view
             <div>
               <p className="text-gray-700 mb-4">
                 Utilizziamo cookie tecnici essenziali per il funzionamento del carrello e, con il tuo consenso,
@@ -99,19 +82,15 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
               <p className="text-sm text-gray-600 mb-4">
                 I dati di pagamento sono gestiti in modo sicuro da Stripe.
                 Per maggiori informazioni, consulta la nostra{' '}
-                <button
-                  onClick={() => {
-                    setIsVisible(false);
-                    navigateTo('privacy');
-                  }}
+                <Link
+                  to="/privacy"
                   className="text-purple-600 hover:text-purple-800 underline font-semibold"
+                  onClick={() => setIsVisible(false)}
                 >
                   Privacy Policy
-                </button>
+                </Link>
                 .
               </p>
-
-              {/* Action buttons */}
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <button
                   onClick={acceptAll}
@@ -134,15 +113,11 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
               </div>
             </div>
           ) : (
-            // Detailed view
             <div>
               <p className="text-gray-700 mb-6">
                 Puoi scegliere quali cookie accettare. I cookie tecnici sono necessari per il funzionamento del sito.
               </p>
-
-              {/* Cookie categories */}
               <div className="space-y-4 mb-6">
-                {/* Necessary cookies */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-bold text-gray-800 flex items-center">
@@ -160,8 +135,6 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
                     Utilizziamo localStorage, non cookie tradizionali.
                   </p>
                 </div>
-
-                {/* Analytics cookies */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
@@ -182,8 +155,6 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
                     Include Google Analytics (quando implementato).
                   </p>
                 </div>
-
-                {/* Third-party info */}
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
                   <p className="text-sm text-blue-800">
                     <strong>ℹ️ Nota:</strong> Durante il pagamento, Stripe può impostare i propri cookie.
@@ -191,8 +162,6 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ navigateTo }) => {
                   </p>
                 </div>
               </div>
-
-              {/* Action buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={savePreferences}

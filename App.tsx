@@ -1,5 +1,6 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './components/pages/HomePage';
 import ContactPage from './components/pages/ContactPage';
@@ -7,58 +8,25 @@ import CartPage from './components/pages/CartPage';
 import SuccessPage from './components/pages/SuccessPage';
 import PrivacyPage from './components/pages/PrivacyPage';
 import Footer from './components/Footer';
-import CookieBanner from './components/CookieBanner';
 import { CartProvider } from './contexts/CartContext';
-import type { Page } from './types';
-
+import CookieBanner from './components/CookieBanner';
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-
-  // Check for success redirect on mount
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
-    const canceled = urlParams.get('canceled');
-
-    if (success === 'true') {
-      setCurrentPage('success');
-    } else if (canceled === 'true') {
-      setCurrentPage('cart');
-    }
-  }, []);
-
-  const navigateTo = useCallback((page: Page) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  }, []);
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'home':
-        return <HomePage navigateTo={navigateTo} />;
-      case 'contact':
-        return <ContactPage />;
-      case 'cart':
-        return <CartPage />;
-      case 'success':
-        return <SuccessPage navigateTo={navigateTo} />;
-      case 'privacy':
-        return <PrivacyPage navigateTo={navigateTo} />;
-      default:
-        return <HomePage navigateTo={navigateTo} />;
-    }
-  };
-
   return (
     <CartProvider>
       <div className="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-        <Header navigateTo={navigateTo} currentPage={currentPage} />
+        <Header />
         <main className="flex-grow">
-          {renderPage()}
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+          </Routes>
         </main>
-        <Footer navigateTo={navigateTo} />
-        <CookieBanner navigateTo={navigateTo} />
+        <Footer />
+        <CookieBanner />
       </div>
     </CartProvider>
   );

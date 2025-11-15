@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
-import type { Page } from '../types';
 import ShoppingCartIcon from './icons/ShoppingCartIcon';
 import Banner from './Banner';
 
@@ -10,14 +10,10 @@ const Logo = () => (
     </div>
   );
 
-interface HeaderProps {
-    navigateTo: (page: Page) => void;
-    currentPage: Page;
-}
-
-const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
+const Header: React.FC = () => {
   const { itemCount } = useCart();
   const [showBanner, setShowBanner] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,28 +28,36 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinkClasses = (page: Page) => 
+  const navLinkClasses = ({ isActive }: { isActive: boolean }) => 
     `cursor-pointer text-sm font-semibold transition-colors duration-300 ${
-      currentPage === page ? 'text-[#f06aa7]' : 'text-white hover:text-[#f06aa7]'
+      isActive ? 'text-[#f06aa7]' : 'text-white hover:text-[#f06aa7]'
     }`;
+
+  const handleBannerClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    navigate('/');
+    setTimeout(() => {
+      document.getElementById('buy')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[#43d3b0] shadow-lg">
       <nav className="container mx-auto px-6 py-2 flex justify-between items-center">
-        <div onClick={() => navigateTo('home')} className="cursor-pointer shadow-sm">
+        <Link to="/" className="cursor-pointer shadow-sm">
           <Logo />
-        </div>
+        </Link>
         <div className="flex items-center space-x-8">
-          <a onClick={() => navigateTo('home')} className={navLinkClasses('home')}>HOME</a>
-          <a onClick={() => navigateTo('contact')} className={navLinkClasses('contact')}>CONTATTI</a>
-          <a onClick={() => navigateTo('cart')} className={`${navLinkClasses('cart')} relative`}>
+          <NavLink to="/" className={navLinkClasses}>HOME</NavLink>
+          <NavLink to="/contact" className={navLinkClasses}>CONTATTI</NavLink>
+          <NavLink to="/cart" className={({ isActive }) => `${navLinkClasses({ isActive })} relative`}>
             <ShoppingCartIcon />
             {itemCount > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {itemCount}
               </span>
             )}
-          </a>
+          </NavLink>
         </div>
       </nav>
       <div 
@@ -61,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
           showBanner ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-      <a href="#buy" onClick={(e) => { e.preventDefault(); navigateTo('home'); setTimeout(() => { document.getElementById('buy')?.scrollIntoView({ behavior: 'smooth' }); }, 100); }}><Banner /></a>
+        <a href="#buy" onClick={handleBannerClick}><Banner /></a>
       </div>
     </header>
   );

@@ -37,8 +37,12 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="w-full px-4 py-12 sm:py-16 md:py-20">
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full px-4 py-12 content-center min-h-screen sm:py-16 md:py-20 relative">
+        <img src={`${process.env.CDN_BASE_URL}/pics/35.jpg`} alt="calendar"  
+          className="absolute z-0 mx-auto object-cover object-bottom top-0 left-0 w-full h-full" 
+        />
+      <div className="absolute w-full h-full bg-black opacity-30 top-0 left-0 z-10"></div>
+      <div className="max-w-7xl mx-auto relative z-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {features.map((feature) => (
             <div
@@ -67,7 +71,9 @@ const FeaturesSection = () => {
               </p>
             </div>
           ))}
+
         </div>
+
       </div>
     </section>
   );

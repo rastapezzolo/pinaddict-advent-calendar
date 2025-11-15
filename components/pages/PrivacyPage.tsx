@@ -1,11 +1,7 @@
 import React from 'react';
-import type { Page } from '../../types';
+import { Link } from 'react-router-dom';
 
-interface PrivacyPageProps {
-  navigateTo: (page: Page) => void;
-}
-
-const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
+const PrivacyPage: React.FC = () => {
   return (
     <div className="bg-gray-50 py-16 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 md:p-12">
@@ -196,12 +192,12 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-200">
-          <button
-            onClick={() => navigateTo('home')}
+          <Link
+            to="/"
             className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-8 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg"
           >
             Torna alla Home
-          </button>
+          </Link>
         </div>
       </div>
     </div>
