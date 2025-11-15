@@ -28,7 +28,7 @@ const SocialButtons = () => {
           />
         </svg>
       ),
-      url: 'https://instagram.com/pinaddict0',
+      url: 'https://instagram.com/pinaddict.it',
       label: 'Seguici su Instagram',
     },
     // {
