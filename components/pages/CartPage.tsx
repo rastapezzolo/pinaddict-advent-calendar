@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCart } from '../../contexts/CartContext';
+import { SHIPPING_PRICE, useCart } from '../../contexts/CartContext';
 import type { CartItem } from '../../types';
 import TrashIcon from '../icons/TrashIcon';
 import PlusIcon from '../icons/PlusIcon';
@@ -20,6 +20,7 @@ const CartItemRow: React.FC<{ item: CartItem }> = ({ item }) => {
                 <div>
                     <h3 className="font-semibold text-gray-800">{item.product.name}</h3>
                     <p className="text-sm text-gray-500">{item.product.price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
+                    <p className="text-sm text-gray-500">{SHIPPING_PRICE > 0 ? `+ Spedizione ${SHIPPING_PRICE.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}` : 'Spedizione Gratuita'}</p>
                 </div>
             </div>
             <div className="flex items-center space-x-4">

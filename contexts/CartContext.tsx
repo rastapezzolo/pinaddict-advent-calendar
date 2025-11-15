@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import type { CartItem, Product } from '../types';
 
+export const SHIPPING_PRICE = 5.00;
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (product: Product, quantity?: number) => void;
@@ -59,7 +60,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCartItems([]);
   };
 
-  const cartTotal = cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  const cartTotal = cartItems.reduce((total, item) => total + item.product.price * item.quantity + SHIPPING_PRICE, 0);
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const value = {
